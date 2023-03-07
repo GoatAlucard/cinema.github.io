@@ -1,0 +1,92 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>TU BOLETA</title>
+  </head>
+  <body>
+    <h1>Compra de boletos</h1>
+    <div class="root">
+      <form id="form">
+        <select name="" id="select">
+          <option value="1">Fila 1 - 20 tikets disponibles</option>
+          <option value="2">Fila 2 - 40 tikets disponibles</option>
+          <option value="3">Fila 3 - 30 tikets disponibles</option>
+        </select>
+        <button type="submit">presiona para comprar</button>
+      </form>
+      <div class="alert" id="alert"></div>
+    </div>
+  </body>
+</html>
+
+<script>
+  const form = document.getElementById("form");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const select = document.getElementById("select");
+    if (select.value === "1") {
+      buyTikets(select.value, 20);
+    }
+    if (select.value === "2") {
+      buyTikets(select.value, 40);
+    }
+    if (select.value === "3") {
+      buyTikets(select.value, 30);
+    }
+    form.reset();
+  });
+
+  const buyTikets = (numeroFila, tikest) => {
+    const $alert = document.getElementById("alert");
+    const fila = numeroFila;
+    let tiketsDisponibles = tikest;
+
+    let ask = confirm(
+      `Numero de tikets disponibles en la fila numero ${fila} - ${tiketsDisponibles}, desea comprar?`
+    );
+
+    while (ask && tiketsDisponibles > 0) {
+      getTikets = parseInt(
+        prompt(`¿cuantos tikets de la fila numero ${fila} quiere comprar?`)
+      );
+
+      if (isNaN(getTikets) || getTikets <= 0) {
+        $alert.innerText = `Dato invalido`;
+        $alert.classList.add("fail");
+        break;
+      }
+
+      if (getTikets > tiketsDisponibles) {
+        $alert.innerText = `Solo contamos con ${tiketsDisponibles} tikets disponibles`;
+        $alert.classList.add("fail");
+        break;
+      }
+
+      if (getTikets <= tiketsDisponibles) {
+        tiketsDisponibles = tiketsDisponibles - getTikets;
+        $alert.innerText = `Numero de tikets comprados ${
+          tikest - tiketsDisponibles
+        }`;
+        $alert.classList.add("ok");
+        ask = confirm(
+          `Numero de tikets disponibles ${tiketsDisponibles}, desea comprar mas?`
+        );
+      }
+
+      if (tiketsDisponibles === 0) {
+        $alert.innerText = `La fila numero ${fila} ya no cuenta con tikets disponibles, le sugerimos mirar las filas restantes.`;
+        $alert.classList.add("fail");
+      }
+    }
+    setTimeout(() => {
+      $alert.innerText = "";
+    }, 6000);
+  };
+</script>
